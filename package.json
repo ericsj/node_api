@@ -22,6 +22,9 @@
     "mongodb": "^2.2.36"
   },
   "devDependencies": {
+    "eslint": "^7.20.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-react": "^7.22.0",
     "nodemon": "^2.0.7"
   }
 }
