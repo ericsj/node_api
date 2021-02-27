@@ -51,7 +51,21 @@ function returnGetResult(err, item, response) {
   }
 }
 
-exports.note_routes = function(app, db) {
+/**
+ * returns result of a Delete operation(Delete)
+ * @param {object} err - db error
+ * @param {object} id - note id
+ * @param {object} response - response request
+ */
+function returnDeleteResult(err, id, response) {
+  if (err) {
+    response.send({'error': 'An error has occured'});
+  } else {
+    response.send('Note ' + id + ' deleted!');
+  }
+}
+
+exports.noteRoutes = function(app, db) {
   app.post('/notes', (request, response) => {
     db.collection('notes').insert(requestToNote(request), (err, result) => {
       returnPostResult(err, result, response);
@@ -60,6 +74,11 @@ exports.note_routes = function(app, db) {
   app.get('/notes/:id', (request, response) => {
     db.collection('notes').findOne(requestToObjectId(request), (err, item) => {
       returnGetResult(err, item, response);
+    });
+  });
+  app.delete('/notes/:id', (request, response) => {
+    db.collection('notes').remove(requestToObjectId(request), (err, item) => {
+      returnDeleteResult(err, request.params.id, response);
     });
   });
 };
