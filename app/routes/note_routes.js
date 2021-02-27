@@ -24,61 +24,47 @@ function requestToObjectId(request) {
 }
 
 /**
- * returns result of an Insert operation(POST)
+ * returns result of a CRUD operation
  * @param {object} err - db error
- * @param {object} result - db result
  * @param {object} response - response request
+ * @param {string|object} message - return message
  */
-function returnPostResult(err, result, response) {
+function returnCrudResult(err, response, message) {
   if (err) {
     response.send({'error': 'An error has occured'});
   } else {
-    response.send(result.ops[0]);
-  }
-}
-
-/**
- * returns result of an Retrieve operation(GET)
- * @param {object} err - db error
- * @param {object} item - db result
- * @param {object} response - response request
- */
-function returnGetResult(err, item, response) {
-  if (err) {
-    response.send({'error': 'An error has occured'});
-  } else {
-    response.send(item);
-  }
-}
-
-/**
- * returns result of a Delete operation(Delete)
- * @param {object} err - db error
- * @param {object} id - note id
- * @param {object} response - response request
- */
-function returnDeleteResult(err, id, response) {
-  if (err) {
-    response.send({'error': 'An error has occured'});
-  } else {
-    response.send('Note ' + id + ' deleted!');
+    response.send(message);
   }
 }
 
 exports.noteRoutes = function(app, db) {
   app.post('/notes', (request, response) => {
     db.collection('notes').insert(requestToNote(request), (err, result) => {
-      returnPostResult(err, result, response);
+      returnCrudResult(
+          err,
+          response,
+          result.ops[0],
+      );
     });
   });
+
   app.get('/notes/:id', (request, response) => {
     db.collection('notes').findOne(requestToObjectId(request), (err, item) => {
-      returnGetResult(err, item, response);
+      returnCrudResult(
+          err,
+          response,
+          item,
+      );
     });
   });
+
   app.delete('/notes/:id', (request, response) => {
     db.collection('notes').remove(requestToObjectId(request), (err, item) => {
-      returnDeleteResult(err, request.params.id, response);
+      returnCrudResult(
+          err,
+          response,
+          'Note ' + request.params.id + ' deleted!',
+      );
     });
   });
 };
