@@ -9,7 +9,7 @@ const PORT = 8000;
 app.use(bodyParser.urlencoded({extended: true}));
 MongoClient.connect(dbConfig.url, (err, database) => {
   if (err) return console.log(err);
-  const db = database.db('Notes-cluster');
+  const db = database.db('notes_db');
   routes(app, db);
 });
 app.listen(PORT, () => {
