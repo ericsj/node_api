@@ -59,12 +59,21 @@ exports.noteRoutes = function(app, db) {
   });
 
   app.delete('/notes/:id', (request, response) => {
-    db.collection('notes').remove(requestToObjectId(request), (err, item) => {
-      returnCrudResult(
-          err,
-          response,
-          'Note ' + request.params.id + ' deleted!',
-      );
-    });
+    db.collection('notes').deleteOne(
+        requestToObjectId(request),
+        (err, item) => {
+          let message;
+          if (item.result.n == 1) {
+            message = 'Note ' + request.params.id + ' deleted!';
+          } else {
+            message = 'No note was found with the given ID';
+          }
+          returnCrudResult(
+              err,
+              response,
+              message,
+          );
+        },
+    );
   });
 };
