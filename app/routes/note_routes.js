@@ -76,4 +76,19 @@ exports.noteRoutes = function(app, db) {
         },
     );
   });
+
+  app.put('/notes/:id', (request, response) => {
+    note = requestToNote(request);
+    db.collection('notes').update(
+        requestToObjectId(request),
+        note,
+        (err, result) => {
+          returnCrudResult(
+              err,
+              response,
+              note,
+          );
+        },
+    );
+  });
 };
